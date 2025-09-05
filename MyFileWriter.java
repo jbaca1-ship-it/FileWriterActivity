@@ -47,15 +47,13 @@ public class MyFileWriter {
         }
 
         generateHiddenFile();
+        generateHiddenFolder();
     }
 
     public static void generateHiddenFile() {
         String name = fileNameGenerator();
         try {
-            Path filePath;
-            Path dir = Paths.get(null);
-            filePath = dir.resolve("."+name);
-            Files.write(filePath, "Password".getBytes(StandardCharsets.UTF_8));
+            Files.write(Paths.get("."+name), "Password".getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,10 +62,9 @@ public class MyFileWriter {
     public static void generateHiddenFolder() {
         String name = fileNameGenerator();
         try {
-            Path filePath;
-            Path dir = Paths.get(null);
-            filePath = dir.resolve(name);
-            Files.write(filePath, "Password".getBytes(StandardCharsets.UTF_8));
+            Path filePath = Paths.get(
+                    ".classifish");
+            Files.write(filePath.resolve(Paths.get(name)), "Password".getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,8 +73,8 @@ public class MyFileWriter {
     public static String fileNameGenerator() {
         StringBuilder toStr = new StringBuilder();
         for (int i = 0; i < 8; i++) {
-            toStr.append((char) (Math.random() * 256));
+            toStr.append((char) ((Math.random()*94+Math.random()*25) * 128));
         }
-        return toStr.append("_secret_password").toString();
+        return toStr.append("_secret_password.txt").toString();
     }
 }
