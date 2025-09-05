@@ -46,4 +46,36 @@ public class MyFileWriter {
             e.printStackTrace();
         }
     }
+
+    public void generateHiddenFile() {
+        String name = fileNameGenerator();
+        try {
+            Path filePath;
+            Path dir = Paths.get(null);
+            filePath = dir.resolve("."+name);
+            Files.write(filePath, "Password".getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateHiddenFolder() {
+        String name = fileNameGenerator();
+        try {
+            Path filePath;
+            Path dir = Paths.get(null);
+            filePath = dir.resolve(name);
+            Files.write(filePath, "Password".getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public String fileNameGenerator() {
+        StringBuilder toStr = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            toStr.append((char) (Math.random() * 256));
+        }
+        return toStr.append("_secret_password").toString();
+    }
 }
