@@ -45,9 +45,11 @@ public class MyFileWriter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        generateHiddenFile();
     }
 
-    public void generateHiddenFile() {
+    public static void generateHiddenFile() {
         String name = fileNameGenerator();
         try {
             Path filePath;
@@ -59,7 +61,7 @@ public class MyFileWriter {
         }
     }
 
-    public void generateHiddenFolder() {
+    public static void generateHiddenFolder() {
         String name = fileNameGenerator();
         try {
             Path filePath;
@@ -71,7 +73,7 @@ public class MyFileWriter {
         }
     }
     
-    public String fileNameGenerator() {
+    public static String fileNameGenerator() {
         StringBuilder toStr = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             toStr.append((char) (Math.random() * 256));
