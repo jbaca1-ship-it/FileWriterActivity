@@ -86,4 +86,8 @@ public class MyFileWriter {
         }
         System.out.println(file.length());
     }
+
+    public static String toString(File file) {
+        return file.toString();
+    }
 }
