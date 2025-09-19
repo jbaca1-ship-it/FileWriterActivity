@@ -1,5 +1,7 @@
 import java.io.*;
 import java.nio.file.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
 
 public class MyFileWriter {
@@ -94,5 +96,32 @@ public class MyFileWriter {
 
     public static String toString(File file) {
         return file.toString();
+    }
+
+    public String hashFile(String path) {
+        File testFile = new File(path);
+        if (!testFile.exists()) {
+            throw new IllegalArgumentException("No such file exists.");
+        }
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(path));
+            MessageDigest mDigest = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = mDigest.digest(bytes);
+            StringBuilder hashedString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                String hexB = Integer.toHexString(0xff & b);
+                if (hexB.length() == 0) {
+                    hashedString.append("0");
+                }
+                hashedString.append(hexB);
+            }
+            return hashedString.toString();
+        } catch (IOException e) {
+            System.out.println("Cannot read from path.");
+            return null;
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("You should never get this error. Contact my at maguilar1@hwemail.com if this happens.");
+            return null;
+        } 
     }
 }
