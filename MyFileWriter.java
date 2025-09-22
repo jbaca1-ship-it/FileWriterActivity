@@ -44,7 +44,7 @@ public class MyFileWriter {
 
         // // 5. Using Files (java.nio.file)
         // try {
-        // Files.write(Paths.get(fileName5), data.getBytes(StandardCharsets.UTF_8));
+        // // Files.write(Paths.get(fileName5), data.getBytes(StandardCharsets.UTF_8));
         // } catch (IOException e) {
         // e.printStackTrace();
         // }
@@ -98,19 +98,22 @@ public class MyFileWriter {
         return file.toString();
     }
 
-    public String hashFile(String path) {
+    public static String hashFile(String path) {
         File testFile = new File(path);
+        
         if (!testFile.exists()) {
             throw new IllegalArgumentException("No such file exists.");
         }
+        System.out.println(testFile.getAbsolutePath());
         try {
             byte[] bytes = Files.readAllBytes(Paths.get(path));
+          //  System.out.println(Files.readString(Paths.get(path)));
             MessageDigest mDigest = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = mDigest.digest(bytes);
             StringBuilder hashedString = new StringBuilder();
             for (byte b : hashedBytes) {
                 String hexB = Integer.toHexString(0xff & b);
-                if (hexB.length() == 0) {
+                if (hexB.length() == 1) {
                     hashedString.append("0");
                 }
                 hashedString.append(hexB);
