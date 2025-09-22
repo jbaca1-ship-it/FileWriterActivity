@@ -21,7 +21,8 @@ public class MyFileWriter {
         // }
 
         // // 2. Using BufferedWriter
-        // try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName2))) {
+        // try (BufferedWriter bufferedWriter = new BufferedWriter(new
+        // FileWriter(fileName2))) {
         // bufferedWriter.write(data);
         // } catch (IOException e) {
         // e.printStackTrace();
@@ -82,7 +83,6 @@ public class MyFileWriter {
         return toStr.append("_secret_password.txt").toString();
     }
 
-
     private static void printFileSize(String... fileNames) {
         long totalSize = 0;
         for (String fileName : fileNames) {
@@ -100,16 +100,26 @@ public class MyFileWriter {
 
     public static String hashFile(String path) {
         File testFile = new File(path);
-        
+
         if (!testFile.exists()) {
             throw new IllegalArgumentException("No such file exists.");
         }
-        System.out.println(testFile.getAbsolutePath());
+        // System.out.println(testFile.getAbsolutePath());
         try {
             byte[] bytes = Files.readAllBytes(Paths.get(path));
-          //  System.out.println(Files.readString(Paths.get(path)));
+            // Normalize to ensure consistent hashes across OSes:
+            // - Decode as UTF-8
+            // - Strip UTF-8 BOM if present
+            // - Normalize CRLF / CR to LF
+            String content = new String(bytes, StandardCharsets.UTF_8);
+            if (!content.isEmpty() && content.charAt(0) == '\uFEFF') {
+                content = content.substring(1);
+            }
+            content = content.replace("\r\n", "\n").replace("\r", "\n");
+            byte[] normalizedBytes = content.getBytes(StandardCharsets.UTF_8);
+            // System.out.println(Files.readString(Paths.get(path)));
             MessageDigest mDigest = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = mDigest.digest(bytes);
+            byte[] hashedBytes = mDigest.digest(normalizedBytes);
             StringBuilder hashedString = new StringBuilder();
             for (byte b : hashedBytes) {
                 String hexB = Integer.toHexString(0xff & b);
@@ -125,6 +135,6 @@ public class MyFileWriter {
         } catch (NoSuchAlgorithmException e) {
             System.out.println("You should never get this error. Contact my at maguilar1@hwemail.com if this happens.");
             return null;
-        } 
+        }
     }
 }
